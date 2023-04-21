@@ -1,57 +1,7 @@
-using Pkg; Pkg.activate("../../");
-using ArgParse, Distributions, StatsBase, OrdinaryDiffEq, RecursiveArrayTools, DataFrames, SQLite
+using Pkg; Pkg.activate("../");
+using Distributions, StatsBase, OrdinaryDiffEq, RecursiveArrayTools, DataFrames, SQLite
 
 include("helpers.jl")
-
-function parse_commandline()
-  s = ArgParseSettings()
-
-  @add_arg_table! s begin
-      "--db"
-      help = "Use Database to query parameters"
-      "-L"
-      arg_type = Int
-      default = 5
-      help = "LIMIT of rows"
-      "-O"
-      arg_type = Int
-      default = 0
-      help = "The OFFSET clause after LIMIT specifies how many rows to skip at the beginning of the result set."
-      "--beta"
-      arg_type = Float64
-      default = 0.07
-      help = "Spreading rate from non-adopter to adopter beta"
-      "-a"
-      arg_type = Float64
-      default = 0.5
-      help = "Negative benefits alpha"
-      "-g"
-      arg_type = Float64
-      default = 1.
-      help = "Recovery rate gamma, i.e. rate at which adopters loose behavioral trait"
-      "-r"
-      arg_type = Float64
-      default = 0.1
-      help = "Global behavioral diffusion ρ (allows the behaviour to spread between groups)"
-      "-b"
-      arg_type = Float64
-      default = 0.18
-      help = "Group benefits b"
-      "-c"
-      arg_type = Float64
-      default = 1.05
-      help = "Institutional cost c"
-      "-m"
-      arg_type = Float64
-      default = 1e-4
-      help = "Noise u"
-      "-o"
-      default = "."
-      help = "Output file for results"
-    end
-
-  return parse_args(s)
-end
 
 function initialize_u0(;n::Int=20, L::Int=6, M::Int=20, p::Float64=0.01)
     G = zeros(L, n+1)
